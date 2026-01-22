@@ -32,5 +32,5 @@ jobs:
                   application_name: HundDagisApp
                   environment_name: Hunddagisapp-env
                   version_label: v1-${{ github.run_id }}
-                  region: us-north-1
+                  region: eu-north-1
                   deployment_package: deploy_package.zip

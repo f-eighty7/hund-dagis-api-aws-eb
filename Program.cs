@@ -1,7 +1,15 @@
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-var dogs = new List<Dog>();
+var dogs = new List<Dog>
+{
+    new Dog("Bosse", 5, "Labrador"),
+    new Dog("Lassie", 3, "Collie"),
+    new Dog("Puff", 8, "Pudel")
+};
+
+// Resten av koden är samma...
+app.MapGet("/dogs", () => Results.Ok(dogs));
 
 app.MapGet("/", () => "Välkommen till Hunddagiset!");
 

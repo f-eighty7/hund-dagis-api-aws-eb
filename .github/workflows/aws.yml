@@ -1,0 +1,36 @@
+name: Deploy to AWS Elastic Beanstalk
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Setup .NET
+              uses: actions/setup-dotnet@v3
+              with:
+                  dotnet-version: "9.0.x"
+
+            - name: Publish Application
+              run: dotnet publish -c Release -o ./publish
+
+            - name: Generate Deployment Package
+              run: |
+                  cd publish
+                  zip -r ../deploy_package.zip .
+
+            - name: Deploy to EB
+              uses: einaregilsson/beanstalk-deploy@v21
+              with:
+                  aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  application_name: HundDagisApp # Namnet du valde i AWS
+                  environment_name: Hunddagisapp-env # Miljönamnet i AWS
+                  version_label: v1-${{ github.run_id }}
+                  region: us-east-1 # Regionen du valde (t.ex. eu-north-1 för Stockholm)
+                  deployment_package: deploy_package.zip
